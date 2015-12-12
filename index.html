@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en-us">
+	
+<head>
+<meta charset="utf-8">
+<title>SPACE WARS : FLAPPY SPACESHIP  </title>
+
+<script type="text/javascript" src="phaser.min.js"></script>
+</head>
+
+<body style="background-image: url('assets/astronaut.gif');">
+
+<p style="color:white; font-family:Impact; font-size:36px;">
+	Escape the asteroids! 
+	Press the spacebar to jump!
+	
+</p>
+
+<div id="gameDiv"> </div>
+
+<script type= "text/javascript" >
+	var game = new Phaser.Game(940, 580, Phaser.AUTO, 'gameDiv');
+	var bootState={
+		create: function(){
+			this.countdownlabel = game.add.text(
+				game.world.centerX/2,
+				game.world.centerY,
+				"SPACE WARS : FLAPPY SPACESHIP",
+				{font: "30px Impact", fill: "#E3E024"}
+		
+			);
+			setTimeout(function() {
+				console.log('breaks here')
+				game.state.start('main');
+			}, 3000);
+		}
+	};
+
+	var mainState = {
+	    preload: function() { 
+	      // This function will be executed at the beginning     
+	      // That's where we load the game's assets 
+	      game.load.image("background", "assets/spacebg-5.jpg");
+	      game.load.image('spaceship', 'assets/spaceship.png'); 
+	      game.load.image('asteroid', 'assets/asteroid.png');
+	      game.load.audio('takeoff', 'assets/takeoff.mp3');
+	 	},
+	
+	    create: function() { 
+	        // This function is called after the preload function     
+	        // Here we set up the game, display sprites, etc.  
+	        // maybe before all of this code, we have a countdown timer (3,2,1,blastoff!)
+	        // start a timer
+	        game.add.sprite(0,0, 'background');
+	        this.spaceship = this.game.add.sprite(50, 120, 'spaceship');
+	        game.physics.startSystem(Phaser.Physics.ARCADE);
+	        game.physics.arcade.enable(this.spaceship);
+		    this.spaceship.body.gravity.y = 450;  
+		    this.asteroid = game.add.group(); // Create a group  
+		    this.asteroid.enableBody = true;  // Add physics to the group  
+		    this.asteroid.createMultiple(20, 'asteroid'); // Create 20 asteroids
+		    this.timer = game.time.events.loop(430, this.addOneAsteroid, this);
+		    this.spaceship.anchor.setTo(-0.2, 0.5);
+		    this.score = 0;  
+			this.labelScore = game.add.text(20, 20, "0", { font: "30px Arial", fill: "#ffffff" }); 
+	    
+			var spaceKey = this.game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
+		    
+		    spaceKey.onDown.add(this.blastOff, this); 
+	    },
+	
+	    update: function() {
+	        // This function is called 60 times per second    
+	        // It contains the game's logic 
+	         if (this.spaceship.inWorld == false)
+	        	this.restartGame();
+	         if (this.spaceship.angle < 20)  
+	            this.spaceship.angle += 1;
+            
+            game.physics.arcade.overlap(this.spaceship, this.asteroid, this.restartGame, null, this);  
+	    },
+	    
+
+	    blastOff: function() {  
+	    	// Add a vertical velocity to the spaceship
+	    	this.spaceship.body.velocity.y = -350;
+    		// Create an animation on the spaceship
+			var animation = game.add.tween(this.spaceship);
+		
+			// Set the animation to change the angle of the sprite to -20° in 100 milliseconds
+			animation.to({angle: -20}, 100);
+			
+			// And start the animation
+			animation.start();  
+	    	
+		},
+		restartGame: function() {
+			game.add.audio("takeoff").play();
+			game.state.start('main');
+		},
+		
+		addOneAsteroid: function(x, y) {  
+		    // Get the first dead asteroid of our group
+		    var asteroid = this.asteroid.getFirstDead();
+		    var x = 940
+		    var y = Math.random() * (580);
+		    // Set the new position of the asteroid
+		    asteroid.reset(x, y);
+		
+		    // Add velocity to the asteroid to make it move left
+		    // Kill the asteroid when it's no longer visible 
+		    asteroid.body.velocity.x = -725;
+
+		    asteroid.checkWorldBounds = true
+		    asteroid.outOfBoundsKill = true;
+
+			this.score += 1;  
+		    this.labelScore.text = this.score;	
+		},
+	};
+
+	// Add and start the 'main' state to start the game
+	game.state.add('main', mainState);  
+	game.state.add('boot', bootState);
+	game.state.start('boot');
+
+</script>
+</body>
+</html>

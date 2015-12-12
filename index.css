@@ -1,0 +1,88 @@
+body {
+  
+  margin: 0;
+  padding: 0;
+  outline: none;
+  border: 0;
+  font-family: segoe ui, helvetica neue, helvetica, arial, sans-serif;
+  font-weight: 200;
+  background-color: #000066;
+  -webkit-font-smoothing: antialiased;
+  user-select: none;
+}
+
+body {
+  font-size: 14px;
+}
+
+p {
+  font-size: 90%;
+  line-height: 25px;
+  
+}
+
+/* Wrapper */
+div {
+  width: 350px;
+  margin: 20px auto;
+}
+
+/* Window */
+div {
+    height: 450px;
+    background: url('https://49.media.tumblr.com/5d9d44687164a666bb7e344054a9901d/tumblr_nsy6r46nFd1tz85h4o1_500.gif');
+    position: relative;
+    overflow: hidden;
+  margin-bottom: 10px;
+}
+
+/* Score */
+div {
+  position: absolute;
+  width: 100%;
+  display: block;
+  text-align: center;
+  font-size: 250%;
+  padding-top: 20px;
+  color: #fff;
+  font-weight: 700;
+  text-shadow: 2px 2px 0 #000;
+  z-index: 4;
+}
+
+/* Spaceship */
+div {
+    height: 28px;
+    width: 40px;
+    background: url('http://piq.codeus.net/static/media/userpics/piq_109065_100x100.png');
+    position: absolute;
+    bottom: 50%;
+    left: 130px;
+    z-index: 3;
+  animation: SpaceshipHover 0.2s steps(3, end) infinite alternate;
+  transition: transform 0.3s;
+}
+
+@keyframes SpaceshipHover {  
+  0% {background-position: 0 84px;}
+  100% {background-position: 0 0;}
+}
+
+
+/* Asteroids */
+div {
+    width: 60px;
+    height: 100%;
+    position: absolute;
+    right: -60px;
+    z-index: 2;
+}
+
+div {
+  display: none;
+}
+
+
+
+
+
